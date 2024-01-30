@@ -4,11 +4,11 @@ import { useQuery } from "convex/react";
 
 import { api } from "@/convex/_generated/api";
 
-// import { BoardCard } from "./board-card";
+import { BoardCard } from "./board-card";
 import { EmptySearch } from "./empty-search";
 import { EmptyBoards } from "./empty-boards";
 import { EmptyFavorites } from "./empty-favorites";
-// import { NewBoardButton } from "./new-board-button";
+import { NewBoardButton } from "./new-board-button";
 
 interface BoardListProps {
   orgId: string;
@@ -23,28 +23,27 @@ export const BoardList = ({
   query,
 }: BoardListProps) => {
 
-  const data = [];
-  // const data = useQuery(api.boards.get, {
-  //   orgId,
-  //   ...query,
-  // });
+  const data = useQuery(api.boards.get, {
+    orgId,
+  });
 
-  // if (data === undefined) {
-  //   return (
-  //     <div>
-  //       <h2 className="text-3xl">
-  //         {query.favorites ? "Favorite boards" : "Team boards"}
-  //       </h2>
-  //       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
-  //         <NewBoardButton orgId={orgId} disabled />
-  //         <BoardCard.Skeleton />
-  //         <BoardCard.Skeleton />
-  //         <BoardCard.Skeleton />
-  //         <BoardCard.Skeleton />
-  //       </div>
-  //     </div>
-  //   )
-  // }
+  if (data === undefined) {
+  // display Loading state
+    return (
+      <div>
+        <h2 className="text-3xl">
+          {query.favorites ? "Favorite boards" : "Team boards"}
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
+          <NewBoardButton orgId={orgId} disabled />
+          <BoardCard.Skeleton />
+          <BoardCard.Skeleton />
+          <BoardCard.Skeleton />
+          <BoardCard.Skeleton />
+        </div>
+      </div>
+    )
+  }
 
   if (!data?.length && query.search) {
     return <EmptySearch />;
@@ -61,13 +60,12 @@ export const BoardList = ({
 
   return (
     <div>
-      {JSON.stringify(query)}
       <h2 className="text-3xl">
         {query.favorites ? "Favorite boards" : "Team boards"}
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
-        {/* <NewBoardButton orgId={orgId} /> */}
-        {/* {data?.map((board) => (
+        <NewBoardButton orgId={orgId} />
+        {data?.map((board) => (
           <BoardCard
             key={board._id}
             id={board._id}
@@ -77,9 +75,10 @@ export const BoardList = ({
             authorName={board.authorName}
             createdAt={board._creationTime}
             orgId={board.orgId}
-            isFavorite={board.isFavorite}
+            // isFavorite={board.isFavorite} // TODO: update value of favorite from board.isFavorite
+            isFavorite={false}
           />
-        ))} */}
+        ))}
       </div>
     </div>
   );
