@@ -2,6 +2,8 @@ import { v } from "convex/values";
 
 import { mutation, query } from "./_generated/server";
 
+// this file handles CRUD operations for the board entity
+
 const images = [
   "/placeholders/1.svg",
   "/placeholders/2.svg",
