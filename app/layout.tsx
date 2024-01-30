@@ -1,5 +1,7 @@
 import { Inter } from "next/font/google";
+
 import { ConvexClientProvider } from "@/providers/convex-client-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 import type { Metadata } from "next";
 
@@ -20,7 +22,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ConvexClientProvider >
+        <ConvexClientProvider>
+          <Toaster/>
           {children}
         </ConvexClientProvider>
        </body>
