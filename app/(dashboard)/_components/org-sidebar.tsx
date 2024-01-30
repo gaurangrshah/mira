@@ -77,7 +77,7 @@ export function OrgSidebar() {
         >
           <Link href={{
             pathname: "/",
-            query: { favorites: true }
+            query: { favorites: true } // used as props via searchParams in file:///./../page.tsx
           }}>
             <Star className="h-4 w-4 mr-2" />
             Favorite boards

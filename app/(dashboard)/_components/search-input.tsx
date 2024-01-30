@@ -25,11 +25,11 @@ export const SearchInput = () => {
     const url = qs.stringifyUrl({
       url: "/",
       query: {
-        search: debouncedValue,
+        search: debouncedValue, // used as props via searchParams in file:///./../page.tsx
       },
     }, { skipEmptyString: true, skipNull: true });
 
-    router.push(url.toString());
+    router.push(url);
 
   },[router, debouncedValue])
 
