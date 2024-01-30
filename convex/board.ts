@@ -1,7 +1,6 @@
 import { v } from "convex/values";
 
 import { mutation, query } from "./_generated/server";
-
 // this file handles CRUD operations for the board entity
 
 const images = [
@@ -16,6 +15,8 @@ const images = [
   "/placeholders/9.svg",
   "/placeholders/10.svg",
 ];
+
+
 
 export const create = mutation({
   args: {
@@ -43,6 +44,7 @@ export const create = mutation({
   },
 });
 
+
 export const remove = mutation({
   args: { id: v.id("boards") },
   handler: async (ctx, args) => {
@@ -54,19 +56,19 @@ export const remove = mutation({
 
     const userId = identity.subject;
 
-    // TODO: allow checking for favorited boards
-    // const existingFavorite = await ctx.db
-    //   .query("userFavorites")
-    //   .withIndex("by_user_board", (q) =>
-    //     q
-    //       .eq("userId", userId)
-    //       .eq("boardId", args.id)
-    //   )
-    //   .unique();
+    // remove all favorites for this board before deleting the board (CASADE DELETE)
+    const existingFavorite = await ctx.db
+      .query("userFavorites")
+      .withIndex("by_user_board", (q) =>
+        q
+          .eq("userId", userId)
+          .eq("boardId", args.id)
+      )
+      .unique();
 
-    // if (existingFavorite) {
-    //   await ctx.db.delete(existingFavorite._id);
-    // }
+    if (existingFavorite) {
+      await ctx.db.delete(existingFavorite._id);
+    }
 
     await ctx.db.delete(args.id);
   },
