@@ -3,7 +3,7 @@ import { v } from "convex/values";
 
 import { query } from "./_generated/server";
 
-// this file handles queries for multiple boards
+// this file handles queries for multiple boards, including search and favorites
 
 export const get = query({
   args: {
@@ -17,9 +17,6 @@ export const get = query({
     if (!identity) {
       throw new Error("Unauthorized");
     }
-
-
-    const boards = await ctx.db.query("boards").withIndex("by_org", (q) => q.eq("orgId", args.orgId)).order("desc").collect();
 
 
     // if (args.favorites) {
@@ -44,25 +41,25 @@ export const get = query({
     //   }));
     // }
 
-    // const title = args.search as string;
-    // let boards = [];
+    const title = args.search as string;
+    let boards = [];
 
-    // if (title) {
-    //   boards = await ctx.db
-    //     .query("boards")
-    //     .withSearchIndex("search_title", (q) =>
-    //       q
-    //         .search("title", title)
-    //         .eq("orgId", args.orgId)
-    //     )
-    //     .collect();
-    // } else {
-    //   boards = await ctx.db
-    //     .query("boards")
-    //     .withIndex("by_org", (q) => q.eq("orgId", args.orgId))
-    //     .order("desc")
-    //     .collect();
-    // }
+    if (title) {
+      boards = await ctx.db
+        .query("boards")
+        .withSearchIndex("search_title", (q) =>
+          q
+            .search("title", title)
+            .eq("orgId", args.orgId)
+        )
+        .collect();
+    } else {
+      boards = await ctx.db
+        .query("boards")
+        .withIndex("by_org", (q) => q.eq("orgId", args.orgId))
+        .order("desc")
+        .collect();
+    }
 
     const boardsWithFavoriteRelation = boards.map((board) => {
       return ctx.db
