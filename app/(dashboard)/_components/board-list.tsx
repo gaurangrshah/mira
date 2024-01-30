@@ -75,8 +75,7 @@ export const BoardList = ({
             authorName={board.authorName}
             createdAt={board._creationTime}
             orgId={board.orgId}
-            // isFavorite={board.isFavorite} // TODO: update value of favorite from board.isFavorite
-            isFavorite={false}
+            isFavorite={board.isFavorite}
           />
         ))}
       </div>

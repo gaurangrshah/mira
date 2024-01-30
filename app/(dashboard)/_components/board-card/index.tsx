@@ -43,24 +43,23 @@ export const BoardCard = ({
     addSuffix: true,
   });
 
-  // TODO: add favorite actions
-  // const {
-  //   mutate: onFavorite,
-  //   pending: pendingFavorite,
-  // } = useApiMutation(api.board.favorite);
+  const {
+    mutate: onFavorite,
+    pending: pendingFavorite,
+  } = useApiMutation(api.board.favorite);
 
-  // const {
-  //   mutate: onUnfavorite,
-  //   pending: pendingUnfavorite,
-  // } = useApiMutation(api.board.unfavorite);
+  const {
+    mutate: onUnfavorite,
+    pending: pendingUnfavorite,
+  } = useApiMutation(api.board.unfavorite);
 
   const toggleFavorite = () => {
     if (isFavorite) {
-      // onUnfavorite({ id })
-      //   .catch(() => toast.error("Failed to unfavorite"))
+      onUnfavorite({ id })
+        .catch(() => toast.error("Failed to unfavorite"))
     } else {
-      // onFavorite({ id, orgId })
-      //   .catch(() => toast.error("Failed to favorite"))
+      onFavorite({ id, orgId })
+        .catch(() => toast.error("Failed to favorite"))
     }
   };
 
@@ -95,8 +94,7 @@ export const BoardCard = ({
           createdAtLabel={createdAtLabel}
           isFavorite={isFavorite}
           onClick={toggleFavorite}
-          // disabled={pendingFavorite || pendingUnfavorite}  // TODO: update  pendingfavorite
-          disabled={false}
+          disabled={pendingFavorite || pendingUnfavorite}
         />
       </div>
     </Link>
