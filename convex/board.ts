@@ -30,7 +30,6 @@ export const create = mutation({
     }
 
     const randomImage = images[Math.floor(Math.random() * images.length)];
-    console.log("🚀 | randomImage:", randomImage)
 
     const board = await ctx.db.insert("boards", {
       title: args.title,
@@ -55,19 +54,48 @@ export const remove = mutation({
 
     const userId = identity.subject;
 
-    const existingFavorite = await ctx.db
-      .query("userFavorites")
-      .withIndex("by_user_board", (q) =>
-        q
-          .eq("userId", userId)
-          .eq("boardId", args.id)
-      )
-      .unique();
+    // TODO: allow checking for favorited boards
+    // const existingFavorite = await ctx.db
+    //   .query("userFavorites")
+    //   .withIndex("by_user_board", (q) =>
+    //     q
+    //       .eq("userId", userId)
+    //       .eq("boardId", args.id)
+    //   )
+    //   .unique();
 
-    if (existingFavorite) {
-      await ctx.db.delete(existingFavorite._id);
-    }
+    // if (existingFavorite) {
+    //   await ctx.db.delete(existingFavorite._id);
+    // }
 
     await ctx.db.delete(args.id);
+  },
+});
+
+
+export const update = mutation({
+  args: { id: v.id("boards"), title: v.string() },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const title = args.title.trim();
+
+    if (!title) {
+      throw new Error("Title is required");
+    }
+
+    if (title.length > 60) {
+      throw new Error("Title cannot be longer than 60 characters")
+    }
+
+    const board = await ctx.db.patch(args.id, {
+      title: args.title,
+    });
+
+    return board;
   },
 });
