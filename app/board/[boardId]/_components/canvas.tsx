@@ -15,7 +15,7 @@ export  function Canvas({boardId}: CanvasProps) {
 
   return (
     <>
-      <Info />
+      <Info boardId={boardId} />
       <Participants/>
       <Toolbar />
     </>
