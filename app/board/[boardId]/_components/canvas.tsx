@@ -8,7 +8,7 @@ import {
   useSelf,
 } from '@/liveblocks.config';
 
-import { CanvasMode, CanvasState } from '@/types/canvas';
+import { CanvasMode, type CanvasState } from '@/types/canvas';
 
 import { Info } from './info';
 import { Participants } from './participants';
