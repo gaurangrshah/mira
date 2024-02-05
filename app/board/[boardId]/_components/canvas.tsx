@@ -37,6 +37,7 @@ import {
   resizeBounds,
 } from '@/lib/utils';
 import { SelectionBox } from './selection-box';
+import { SelectionTools } from './selection-tools';
 
 interface CanvasProps {
   boardId: string;
@@ -279,11 +280,12 @@ export function Canvas({ boardId }: CanvasProps) {
       <Toolbar
         canvasState={canvasState}
         setCanvasState={setCanvasState}
+        canRedo={canRedo}
+        canUndo={canUndo}
         undo={history.undo}
         redo={history.redo}
-        canUndo={canUndo}
-        canRedo={canRedo}
       />
+      <SelectionTools camera={camera} setLastUsedColor={setLastUsedColor} />
       <svg
         className='h-[100vh] w-[100vw]'
         onWheel={onWheel}
