@@ -77,6 +77,7 @@ export const SelectionTools = memo(
     const deleteLayers = useDeleteLayers();
 
     const selectionBounds = useSelectionBounds();
+    console.log('🚀 | selectionBounds:', selectionBounds);
     if (!selectionBounds) return null;
 
     const x = selectionBounds.width / 2 + selectionBounds.x + camera.x;
