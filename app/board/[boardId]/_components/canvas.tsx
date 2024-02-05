@@ -4,6 +4,26 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import { nanoid } from 'nanoid';
 import { LiveObject } from '@liveblocks/client';
+
+import {
+  type Camera,
+  CanvasMode,
+  type Color,
+  type CanvasState,
+  type LayerType,
+  type Point,
+  type Side,
+  type XYWH,
+} from '@/types/canvas';
+
+import { Info } from './info';
+import { Participants } from './participants';
+import Toolbar from './toolbar';
+import { CursorsPresence } from './cursors-presence';
+import { LayerPreview } from './layer-preview';
+import { SelectionBox } from './selection-box';
+import { SelectionTools } from './selection-tools';
+
 import {
   useCanRedo,
   useCanUndo,
@@ -13,31 +33,11 @@ import {
   useSelf,
   useStorage,
 } from '@/liveblocks.config';
-
-import {
-  Camera,
-  CanvasMode,
-  Color,
-  type CanvasState,
-  LayerType,
-  Point,
-  Side,
-  XYWH,
-} from '@/types/canvas';
-
-import { Info } from './info';
-import { Participants } from './participants';
-import Toolbar from './toolbar';
-import { CursorsPresence } from './cursors-presence';
-import { LayerPreview } from './layer-preview';
-
 import {
   connectionIdToColor,
   pointerEventsToCanvasPoint,
   resizeBounds,
 } from '@/lib/utils';
-import { SelectionBox } from './selection-box';
-import { SelectionTools } from './selection-tools';
 
 interface CanvasProps {
   boardId: string;
