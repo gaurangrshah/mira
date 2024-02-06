@@ -7,6 +7,8 @@ import type { Metadata } from 'next';
 
 import './globals.css';
 import { ModalProvider } from '@/providers/modal-provider';
+import { Suspense } from 'react';
+import { Loading } from './board/[boardId]/_components/loading';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,11 +25,13 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={inter.className}>
-        <ConvexClientProvider>
-          <Toaster />
-          <ModalProvider />
-          {children}
-        </ConvexClientProvider>
+        <Suspense fallback={<Loading />}>
+          <ConvexClientProvider>
+            <Toaster />
+            <ModalProvider />
+            {children}
+          </ConvexClientProvider>
+        </Suspense>
       </body>
     </html>
   );
