@@ -25,7 +25,7 @@ export const SelectionTools = memo(
       ({ storage }) => {
         const liveLayerIds = storage.get('layerIds');
         const indices: number[] = [];
-        const arr = liveLayerIds.toArray();
+        const arr = liveLayerIds.toImmutable();
 
         for (let i = 0; i < arr.length; i++) {
           if (selection.includes(arr[i])) {
@@ -40,11 +40,11 @@ export const SelectionTools = memo(
       [selection]
     );
 
-    const bringToFront = useMutation(
+    const moveToFront = useMutation(
       ({ storage }) => {
         const liveLayerIds = storage.get('layerIds');
         const indices: number[] = [];
-        const arr = liveLayerIds.toArray();
+        const arr = liveLayerIds.toImmutable();
 
         for (let i = 0; i < arr.length; i++) {
           if (selection.includes(arr[i])) {
@@ -77,7 +77,6 @@ export const SelectionTools = memo(
     const deleteLayers = useDeleteLayers();
 
     const selectionBounds = useSelectionBounds();
-    console.log('🚀 | selectionBounds:', selectionBounds);
     if (!selectionBounds) return null;
 
     const x = selectionBounds.width / 2 + selectionBounds.x + camera.x;
@@ -96,7 +95,7 @@ export const SelectionTools = memo(
         <ColorPicker onChange={setFill} />
         <div className='flex flex-col gap-y-0.5'>
           <Hint label='Bring to front'>
-            <Button variant='board' size='icon' onClick={bringToFront}>
+            <Button variant='board' size='icon' onClick={moveToFront}>
               <BringToFront />
             </Button>
           </Hint>

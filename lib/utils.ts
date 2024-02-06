@@ -5,6 +5,8 @@ import {
   type Point,
   Side,
   type XYWH,
+  type PathLayer,
+  LayerType,
 } from '@/types/canvas';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -20,7 +22,7 @@ export function connectionIdToColor(connectionId: number): string {
 }
 
 export function pointerEventsToCanvasPoint(
-  e: React.PointerEvent,
+  e: React.PointerEvent | React.DragEvent,
   camera: Camera
 ) {
   return {
@@ -114,4 +116,82 @@ export function getContrastingTextColor(color: Color) {
   const luminance = 0.299 * color.r + 0.587 * color.g + 0.114 * color.b;
 
   return luminance > 182 ? 'black' : 'white';
+}
+
+/**
+ * calculates the bounding box of the points and returns a PathLayer
+ * the PathLayer is used to draw the pen stroke as a svg path in the canvas
+ *
+ *
+ * @param points
+ * @param color
+ * @returns  {PathLayer}
+ */
+export function penPointsToPathLayer(
+  points: number[][], // [x, y, pressure]
+  color: Color // { r, g, b }
+): PathLayer {
+  if (points.length < 2) {
+    throw new Error('Cannot transform points with less than 2 points');
+  }
+
+  let left = Number.POSITIVE_INFINITY;
+  let top = Number.POSITIVE_INFINITY;
+  let right = Number.NEGATIVE_INFINITY;
+  let bottom = Number.NEGATIVE_INFINITY;
+
+  for (const point of points) {
+    const [x, y] = point;
+
+    if (left > x) {
+      left = x;
+    }
+
+    if (top > y) {
+      top = y;
+    }
+
+    if (right < x) {
+      right = x;
+    }
+
+    if (bottom < y) {
+      bottom = y;
+    }
+  }
+
+  return {
+    type: LayerType.Path,
+    x: left,
+    y: top,
+    width: right - left,
+    height: bottom - top,
+    fill: color,
+    points: points.map(([x, y, pressure]) => [x - left, y - top, pressure]),
+  };
+}
+
+/**
+ * generates svg path string that represents a closed shape with quadratic bezier curves btw. both points
+ *
+ *
+ * @param stroke // [x, y, pressure]
+ * @returns
+ */
+export function getSvgPathFromStroke(stroke: number[][]) {
+  if (!stroke.length) return '';
+
+  // defines the path as a series of quadratic bezier curves
+  const d = stroke.reduce(
+    (acc, [x0, y0], i, arr) => {
+      const [x1, y1] = arr[(i + 1) % arr.length];
+      acc.push(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
+      return acc;
+    },
+    ['M', ...stroke[0], 'Q']
+    // ex. M x0 y0 Q x1 y1 x2 y2
+  );
+
+  d.push('Z'); // close the path
+  return d.join(' '); // ex. "M 0 0 Q 0 0 0 0 Z"
 }

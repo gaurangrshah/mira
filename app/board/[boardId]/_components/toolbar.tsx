@@ -4,6 +4,7 @@ import {
   Pen,
   Pencil,
   Redo2,
+  Scan,
   Square,
   StickyNote,
   Type,
@@ -20,6 +21,7 @@ interface ToolbarProps {
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  resetCamera: () => void;
 }
 
 export default function Toolbar(props: ToolbarProps) {
@@ -125,6 +127,13 @@ export default function Toolbar(props: ToolbarProps) {
           isDisabled={!props.canRedo}
         />
       </div>
+      {/* <div className='flex flex-col items-center rounded-md bg-white p-1.5 shadow-md'>
+        <ToolButton
+          label='Reset View'
+          icon={Scan}
+          onClick={props.resetCamera}
+        />
+      </div> */}
     </div>
   );
 }
