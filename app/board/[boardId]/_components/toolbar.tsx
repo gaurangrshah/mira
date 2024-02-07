@@ -1,7 +1,6 @@
 import {
   Circle,
   MousePointer2,
-  Pen,
   Pencil,
   Redo2,
   Scan,
