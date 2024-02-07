@@ -34,6 +34,7 @@ import {
   useStorage,
 } from '@/liveblocks.config';
 import {
+  cn,
   colorToCss,
   connectionIdToColor,
   findIntersectingLayersWithRectangle,
@@ -449,6 +450,12 @@ export function Canvas({ boardId }: CanvasProps) {
     };
   }, [deleteLayers, history, canvasState.mode]);
 
+  const isPencil = canvasState.mode === CanvasMode.Pencil;
+  const isTranslating = canvasState.mode === CanvasMode.Translating;
+  const isResizing = canvasState.mode === CanvasMode.Resizing;
+  const isSelecting = canvasState.mode === CanvasMode.SelectionNet;
+  const isPressing = canvasState.mode === CanvasMode.Pressing;
+
   return (
     <main className='relative h-full w-full touch-none bg-neutral-100'>
       <Info boardId={boardId} />
@@ -464,12 +471,24 @@ export function Canvas({ boardId }: CanvasProps) {
       />
       <SelectionTools camera={camera} setLastUsedColor={setLastUsedColor} />
       <svg
-        className='h-[100vh] w-[100vw]'
+        className={cn(
+          'h-[100vh] w-[100vw]',
+          isPencil && 'cursor-crosshair',
+          isTranslating && 'cursor-grab',
+          isResizing && 'cursor-move',
+          isSelecting && 'cursor-crosshair',
+          isPressing && 'cursor-crosshair'
+        )}
         onWheel={onWheel}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
         onPointerUp={onPointerUp}
         onPointerDown={onPointerDown}
+        style={{
+          background:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cg fill='none' fill-opacity='.1'%3E%3Cpath fill='%23CBD5E0' d='M0 0h8v8H0zm8 8h8v8H8zm-8 8h8v8H0zm8-8h8v8H8z'/%3E%3C/g%3E%3C/svg%3E\")",
+          backgroundSize: '42px 42px',
+        }}
       >
         <g
           style={{
@@ -497,7 +516,6 @@ export function Canvas({ boardId }: CanvasProps) {
             )}
           <CursorsPresence />
           {pencilDraft != null && pencilDraft.length > 0 && (
-            // shows a
             <Path
               points={pencilDraft}
               fill={colorToCss(lastUsedColor)}
