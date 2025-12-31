@@ -1,4 +1,5 @@
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 
 import { ConvexClientProvider } from '@/providers/convex-client-provider';
 import { Toaster } from '@/components/ui/sonner';
@@ -32,6 +33,12 @@ export default function RootLayout({
             {children}
           </ConvexClientProvider>
         </Suspense>
+        <Script
+          defer
+          src="https://analytics.h1a1ah.com/script.js"
+          data-website-id="51222aa2-619f-444b-a8ff-c68efaaedf06"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
